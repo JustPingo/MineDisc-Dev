@@ -1,5 +1,6 @@
 package pingo.minedisc.common;
 
+import pingo.minedisc.common.packets.MusicPacket;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,6 +13,7 @@ public class TileEntityCDPlayer extends TileEntity {
 	
 	private String currentMusicURL = "";
 	private boolean wasRunningMusic = false;
+	public String playingSource;
 	
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
 
@@ -59,14 +61,14 @@ public class TileEntityCDPlayer extends TileEntity {
 	public void onNeighborBlockChange() {
 		if (!worldObj.isRemote && worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) && currentMusicURL != "") {
 			if (!wasRunningMusic) {
-				Thread th = new ThreadDownloader(this.currentMusicURL, this);
-				th.start();
+				if (this.playingSource != null) MusicManager.stopMusic(this.playingSource);
+				this.playingSource = "";
+				MineDisc.network.sendToDimension(new MusicPacket(currentMusicURL, xCoord, yCoord, zCoord, worldObj.provider.dimensionId, playingSource, "play"), worldObj.provider.dimensionId);
 				wasRunningMusic = true;
 			}
 		} else {
 			if (wasRunningMusic) {
-				MusicManager.stop();
-				wasRunningMusic = false;
+				MineDisc.network.sendToDimension(new MusicPacket(currentMusicURL, xCoord, yCoord, zCoord, worldObj.provider.dimensionId, playingSource, "stop"), worldObj.provider.dimensionId);
 			}
 		}
 		worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, MineDisc.CDPlayer);

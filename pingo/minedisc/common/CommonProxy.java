@@ -7,4 +7,8 @@ public class CommonProxy {
 		
 	}
 
+	public void updateSoundSystem() {
+		
+	}
+
 }

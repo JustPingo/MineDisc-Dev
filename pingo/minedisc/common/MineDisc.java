@@ -1,5 +1,9 @@
 package pingo.minedisc.common;
 
+import pingo.minedisc.common.packets.MusicPacket;
+import pingo.minedisc.common.packets.MusicPacketHandler;
+import pingo.minedisc.common.packets.MusicPacketResponse;
+import pingo.minedisc.common.packets.MusicPacketResponseHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -12,6 +16,8 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -33,6 +39,8 @@ public class MineDisc
     public static Block CDPlayer;
     
     public static Item wifiCD;
+    
+	public static SimpleNetworkWrapper network;
 
     public static CreativeTabs minediscCT = new CreativeTabs("tabName") {
         @Override
@@ -84,11 +92,15 @@ public class MineDisc
 	@EventHandler
 	public void serverLoad(FMLServerStartingEvent event){
 		event.registerServerCommand(new SetStackCommand());
+		event.registerServerCommand(new PlayMusicCommand());
 	}
 
 	@EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-
+		proxy.updateSoundSystem();
+		network = NetworkRegistry.INSTANCE.newSimpleChannel("minedisc");
+	    network.registerMessage(MusicPacketHandler.class, MusicPacket.class, 0, Side.CLIENT);
+	    network.registerMessage(MusicPacketResponseHandler.class, MusicPacketResponse.class, 1, Side.SERVER);
 	}
 	
 	@SuppressWarnings("unchecked")
