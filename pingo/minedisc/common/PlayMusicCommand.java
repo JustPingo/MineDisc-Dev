@@ -50,7 +50,7 @@ public class PlayMusicCommand implements ICommand {
 		
 		ChunkCoordinates coord = sender.getPlayerCoordinates();
 		
-		MineDisc.network.sendToDimension(new MusicPacket(args[0], coord.posX, coord.posY, coord.posZ, sender.getEntityWorld().provider.dimensionId, null, "play"), sender.getEntityWorld().provider.dimensionId);
+		MineDisc.network.sendToDimension(new MusicPacket(args[0], coord.posX, coord.posY, coord.posZ, sender.getEntityWorld().provider.dimensionId, "play"), sender.getEntityWorld().provider.dimensionId);
 	}
 
 	@Override

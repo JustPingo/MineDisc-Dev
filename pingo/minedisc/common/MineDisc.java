@@ -1,13 +1,11 @@
 package pingo.minedisc.common;
 
-import pingo.minedisc.common.packets.MusicPacket;
-import pingo.minedisc.common.packets.MusicPacketHandler;
-import pingo.minedisc.common.packets.MusicPacketResponse;
-import pingo.minedisc.common.packets.MusicPacketResponseHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import pingo.minedisc.common.packets.MusicPacket;
+import pingo.minedisc.common.packets.MusicPacketHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -100,7 +98,6 @@ public class MineDisc
 		proxy.updateSoundSystem();
 		network = NetworkRegistry.INSTANCE.newSimpleChannel("minedisc");
 	    network.registerMessage(MusicPacketHandler.class, MusicPacket.class, 0, Side.CLIENT);
-	    network.registerMessage(MusicPacketResponseHandler.class, MusicPacketResponse.class, 1, Side.SERVER);
 	}
 	
 	@SuppressWarnings("unchecked")

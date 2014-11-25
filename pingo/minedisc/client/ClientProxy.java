@@ -6,6 +6,11 @@ import pingo.minedisc.common.MusicManager;
 public class ClientProxy extends CommonProxy {
 
 	@Override
+	public String getSide() {
+		return "client";
+	}
+	
+	@Override
 	public void registerRender() {
 		
 	}
