@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Random;
 import java.util.UUID;
 
 import net.minecraft.client.Minecraft;
@@ -17,33 +16,36 @@ public class MusicManager {
 	
 	private static SoundSystem mcSndSystem;
 	
-	private final static String[][] acceptedTypes = new String[][] { new String[] { "audio/x-wav", ".wav" } };
+	private final static String[][] acceptedTypes = new String[][] { new String[] { "audio/ogg", ".ogg" } };
 	
 	public static HashMap<String, int[]> playingMusics = new HashMap<String, int[]>();
 	
 	public static void updateSoundSystem() { // You should never copy this method. It's super dangerous and heavy.
-		try {
-			SoundHandler sndHandler = Minecraft.getMinecraft().getSoundHandler();
-			Field sndManagerField = sndHandler.getClass().getDeclaredField("sndManager");
-			sndManagerField.setAccessible(true);
-			SoundManager mcSndManager = (SoundManager) sndManagerField.get(sndHandler);
-			
-			Field sndSystemField = mcSndManager.getClass().getDeclaredField("sndSystem");
-			sndSystemField.setAccessible(true);
-			MusicManager.mcSndSystem = (SoundSystem) sndSystemField.get(mcSndManager);
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (NoSuchFieldException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
+		if (MusicManager.mcSndSystem == null) {
+			try {
+				SoundHandler sndHandler = Minecraft.getMinecraft().getSoundHandler();
+				Field sndManagerField = sndHandler.getClass().getDeclaredField("sndManager");
+				sndManagerField.setAccessible(true);
+				SoundManager mcSndManager = (SoundManager) sndManagerField.get(sndHandler);
+				
+				Field sndSystemField = mcSndManager.getClass().getDeclaredField("sndSystem");
+				sndSystemField.setAccessible(true);
+				MusicManager.mcSndSystem = (SoundSystem) sndSystemField.get(mcSndManager);
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (NoSuchFieldException e) {
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
 	public static String playMusic(String urlToReach, int x, int y, int z, float volume) {
 		if (MineDisc.proxy.getSide() == "client") {
+			MusicManager.updateSoundSystem();
 			try {
 				URL url = new URL(urlToReach);
 				String type = url.openConnection().getContentType();
@@ -52,7 +54,7 @@ public class MusicManager {
 					if (type != null) {
 						if (type.equals(row[0])) {
 							String identifier = UUID.randomUUID().toString() + row[1];
-							return MusicManager.mcSndSystem.quickPlay(false, new URL(urlToReach), identifier, false, x, y, z, SoundSystemConfig.ATTENUATION_LINEAR, 16);
+							return MusicManager.mcSndSystem.quickStream(false, new URL(urlToReach), identifier, false, x, y, z, SoundSystemConfig.ATTENUATION_LINEAR, 16);
 						}	
 					}
 				}

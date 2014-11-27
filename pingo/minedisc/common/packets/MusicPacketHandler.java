@@ -22,7 +22,7 @@ public class MusicPacketHandler implements IMessageHandler<MusicPacket, IMessage
 			    }
 			}
 			System.out.println("Play!");
-			MusicManager.playingMusics.put(MusicManager.playMusic(message.url, message.x, message.y, message.z, 1), new int[] { message.x, message.y, message.z, message.dimensionID });
+			MusicManager.playingMusics.put(MusicManager.playMusic(message.url, message.x, message.y, message.z, 1), new int[] { message.x, message.y, message.z });
 		} else if (message.action.equals("stop")) {
 			for(Entry<String, int[]> entry : MusicManager.playingMusics.entrySet()) {
 			    int[] value = entry.getValue();

@@ -21,6 +21,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+// Credits : diesieben07 & Gliby for SoundSystem help
+
 @Mod(modid = MineDisc.MODID, version = MineDisc.VERSION, name = MineDisc.NAME)
 public class MineDisc
 {
@@ -95,7 +97,6 @@ public class MineDisc
 
 	@EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-		proxy.updateSoundSystem();
 		network = NetworkRegistry.INSTANCE.newSimpleChannel("minedisc");
 	    network.registerMessage(MusicPacketHandler.class, MusicPacket.class, 0, Side.CLIENT);
 	}

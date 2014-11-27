@@ -66,6 +66,7 @@ public class TileEntityCDPlayer extends TileEntity {
 		} else {
 			if (wasRunningMusic) {
 				MineDisc.network.sendToDimension(new MusicPacket(currentMusicURL, xCoord, yCoord, zCoord, worldObj.provider.dimensionId, "stop"), worldObj.provider.dimensionId);
+				wasRunningMusic = false;
 			}
 		}
 		worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, MineDisc.CDPlayer);
